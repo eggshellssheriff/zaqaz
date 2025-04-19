@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Trash2, ArrowUp } from 'lucide-react';
 import { useApp, Customer, Order } from '@/contexts/AppContext';
@@ -152,27 +151,30 @@ const Database: React.FC = () => {
               </div>
               
               <div className="border rounded-md">
-                <div className="bg-muted p-2 font-semibold grid grid-cols-4">
-                  <div className="col-span-2">Товар</div>
+                <div className="bg-muted p-2 font-semibold grid grid-cols-[1fr,auto,auto]">
+                  <div>Товар</div>
                   <div>Дата</div>
-                  <div className="text-right">Сумма</div>
+                  <div className="text-right pr-8">Сумма</div>
                 </div>
                 
                 <div className="max-h-96 overflow-y-auto">
                   {getSortedOrders(currentCustomer.orders).map(order => (
-                    <div key={order.id} className="border-t p-2 grid grid-cols-4 relative">
-                      <div className="col-span-2 font-medium">{order.productName}</div>
-                      <div className="text-sm">{order.orderDate}</div>
-                      <div className="text-right">{(order.price * order.quantity).toLocaleString()} тг</div>
-                      
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-6 w-6 text-destructive absolute top-2 right-2"
-                        onClick={() => handleDeleteCustomerOrder(currentCustomer.phoneNumber, order.id)}
-                      >
-                        <Trash2 size={14} />
-                      </Button>
+                    <div key={order.id} className="border-t p-2 grid grid-cols-[1fr,auto,auto] gap-2 relative">
+                      <div className="font-medium truncate max-w-[200px]">{order.productName}</div>
+                      <div className="text-sm whitespace-nowrap">{order.orderDate}</div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-right whitespace-nowrap">
+                          {(order.price * order.quantity).toLocaleString()} тг
+                        </span>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-6 w-6 text-destructive"
+                          onClick={() => handleDeleteCustomerOrder(currentCustomer.phoneNumber, order.id)}
+                        >
+                          <Trash2 size={14} />
+                        </Button>
+                      </div>
                     </div>
                   ))}
                 </div>

@@ -135,3 +135,17 @@
 .fixed-header {
   @apply sticky top-0 z-10 bg-background;
 }
+
+/* Add these styles at the end of the file */
+.dialog-content {
+  @apply max-h-[calc(100vh-2rem)] overflow-y-auto;
+}
+
+.mobile-keyboard-scroll {
+  @apply overflow-y-auto -mx-6 px-6;
+  max-height: calc(100vh - 120px);
+}
+
+.product-name-truncate {
+  @apply truncate block max-w-[150px];
+}

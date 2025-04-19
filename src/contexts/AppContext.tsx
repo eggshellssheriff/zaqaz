@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
 // Types
@@ -123,6 +122,13 @@ export const AppProvider = ({ children }: AppProviderProps) => {
     const savedConverterSetting = localStorage.getItem(LOCAL_STORAGE_KEYS.SHOW_CONVERTER);
     return savedConverterSetting ? JSON.parse(savedConverterSetting) : true;
   });
+
+  useEffect(() => {
+    const savedTheme = localStorage.getItem(LOCAL_STORAGE_KEYS.DARK_MODE);
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const initialTheme = savedTheme !== null ? JSON.parse(savedTheme) : prefersDark;
+    setIsDarkMode(initialTheme);
+  }, []);
 
   // Save to localStorage whenever state changes
   useEffect(() => {
