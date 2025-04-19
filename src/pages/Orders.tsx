@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Plus, Pencil, Trash2, ArrowUp } from 'lucide-react';
 import { useApp, Order, OrderStatus } from '@/contexts/AppContext';
@@ -92,7 +91,7 @@ const Orders: React.FC = () => {
       setPrice(currentOrder.price.toString());
       setQuantity(currentOrder.quantity.toString());
       setCustomerName(currentOrder.customerName);
-      setPhoneNumber(currentOrder.phoneNumber);
+      setPhoneNumber(currentOrder.phoneNumber.startsWith('+7') ? currentOrder.phoneNumber.slice(2) : currentOrder.phoneNumber);
       setOrderDate(currentOrder.orderDate);
       setStatus(currentOrder.status);
       setDescription(currentOrder.description || '');
@@ -121,7 +120,7 @@ const Orders: React.FC = () => {
       price: parseFloat(price),
       quantity: parseInt(quantity),
       customerName,
-      phoneNumber,
+      phoneNumber: phoneNumber.startsWith('+7') ? phoneNumber : '+7' + phoneNumber,
       orderDate,
       status,
       description,
@@ -198,63 +197,27 @@ const Orders: React.FC = () => {
         {filteredOrders.map(order => (
           <div 
             key={order.id} 
-            className="list-view-item hover:bg-accent/50 cursor-pointer"
+            className="list-view-item hover:bg-accent/50 cursor-pointer overflow-hidden"
             onClick={() => handleViewOrder(order)}
           >
-            <div className="flex items-center space-x-2 overflow-hidden">
-              <div className="font-medium truncate max-w-[60%] flex items-center">
-                {order.productName}
-                <span className="ml-2 text-xs text-muted-foreground">#{order.id.slice(0, 5)}</span>
+            <div className="flex items-center justify-between w-full">
+              <div className="flex-1 min-w-0">
+                <div className="font-medium truncate">
+                  {order.productName}
+                  <span className="ml-2 text-xs text-muted-foreground">#{order.id.slice(0, 5)}</span>
+                </div>
+                <div className="text-sm text-muted-foreground">{order.orderDate}</div>
               </div>
-            </div>
-            
-            <div className="flex items-center space-x-3">
-              <div className="text-sm">{order.customerName}</div>
-              
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className={`px-2 py-1 text-xs rounded ${getStatusColor(order.status)}`}
-                  >
-                    {order.status}
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent>
-                  <DropdownMenuItem 
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleStatusChange(order.id, 'в пути');
-                    }}
-                  >
-                    в пути
-                  </DropdownMenuItem>
-                  <DropdownMenuItem 
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleStatusChange(order.id, 'на складе');
-                    }}
-                  >
-                    на складе
-                  </DropdownMenuItem>
-                  <DropdownMenuItem 
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleStatusChange(order.id, 'отдано');
-                    }}
-                  >
-                    отдано
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
+              <div className="ml-4 whitespace-nowrap">
+                {order.price.toLocaleString()} тг
+              </div>
             </div>
           </div>
         ))}
       </div>
     );
   };
-  
+
   const renderGridView = () => {
     return (
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
@@ -265,21 +228,21 @@ const Orders: React.FC = () => {
             onClick={() => handleViewOrder(order)}
           >
             <div className="flex justify-between items-center mb-2">
-              <div className="font-medium truncate max-w-[80%] flex items-center">
+              <div className="font-medium truncate max-w-[80%]">
                 {order.productName}
                 <span className="ml-2 text-xs text-muted-foreground">#{order.id.slice(0, 5)}</span>
               </div>
             </div>
             
             <div className="text-sm text-muted-foreground mb-1">{order.orderDate}</div>
-            <div className="font-medium mb-2">{order.customerName}</div>
+            <div className="font-medium mb-2 truncate">{order.customerName}</div>
             
             {order.imageUrl && (
-              <div className="mb-2">
+              <div className="mb-2 h-32 overflow-hidden rounded-md">
                 <img 
                   src={order.imageUrl} 
                   alt={order.productName}
-                  className="w-full h-32 object-cover rounded-md"
+                  className="w-full h-full object-cover"
                 />
               </div>
             )}
@@ -353,9 +316,9 @@ const Orders: React.FC = () => {
       </div>
     );
   };
-  
+
   return (
-    <div className="container mx-auto pb-16">
+    <div className="container mx-auto max-w-md pb-16">
       <div className="fixed-header py-4 flex justify-between items-center">
         <h1 className="text-2xl font-bold">Заказы</h1>
         <Button 
@@ -388,7 +351,7 @@ const Orders: React.FC = () => {
       
       {/* Add Order Dialog */}
       <Dialog open={showAddDialog} onOpenChange={setShowAddDialog}>
-        <DialogContent>
+        <DialogContent className="max-w-md">
           <DialogHeader>
             <DialogTitle>Добавить заказ</DialogTitle>
           </DialogHeader>
@@ -401,6 +364,7 @@ const Orders: React.FC = () => {
                   value={productName}
                   onChange={(e) => setProductName(e.target.value)}
                   required
+                  className="truncate"
                 />
               </div>
               
@@ -439,18 +403,25 @@ const Orders: React.FC = () => {
                   value={customerName}
                   onChange={(e) => setCustomerName(e.target.value)}
                   required
+                  className="truncate"
                 />
               </div>
               
               <div className="space-y-2">
                 <Label htmlFor="phone-number">Номер телефона</Label>
-                <Input
-                  id="phone-number"
-                  type="tel"
-                  value={phoneNumber}
-                  onChange={(e) => setPhoneNumber(e.target.value)}
-                  required
-                />
+                <div className="flex">
+                  <span className="inline-flex items-center px-3 rounded-l-md border border-r-0 border-input bg-muted">
+                    +7
+                  </span>
+                  <Input
+                    id="phone-number"
+                    type="tel"
+                    value={phoneNumber}
+                    onChange={(e) => setPhoneNumber(e.target.value)}
+                    required
+                    className="rounded-l-none"
+                  />
+                </div>
               </div>
               
               <div className="grid grid-cols-2 gap-4">
@@ -494,7 +465,7 @@ const Orders: React.FC = () => {
               <ImageHandler
                 imageUrl={imageUrl}
                 onImageChange={setImageUrl}
-                maxSize={1000} // 1000 KB = 1 MB
+                maxSize={1000}
               />
             </div>
             <DialogFooter className="mt-4">
@@ -507,26 +478,28 @@ const Orders: React.FC = () => {
       {/* View Order Dialog */}
       <Dialog open={showViewDialog} onOpenChange={setShowViewDialog}>
         {currentOrder && (
-          <DialogContent>
+          <DialogContent className="max-w-md">
             <DialogHeader>
-              <DialogTitle className="flex items-center">
+              <DialogTitle className="flex items-center truncate">
                 {currentOrder.productName}
                 <span className="ml-2 text-xs text-muted-foreground">#{currentOrder.id.slice(0, 5)}</span>
               </DialogTitle>
             </DialogHeader>
             <div className="space-y-4">
               {currentOrder.imageUrl && (
-                <img
-                  src={currentOrder.imageUrl}
-                  alt={currentOrder.productName}
-                  className="w-full h-auto object-contain rounded-md"
-                />
+                <div className="h-48 overflow-hidden rounded-md">
+                  <img
+                    src={currentOrder.imageUrl}
+                    alt={currentOrder.productName}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
               )}
               
               <div className="grid grid-cols-2 gap-2">
                 <div>
                   <span className="text-sm text-muted-foreground">Заказчик:</span>
-                  <p className="font-medium">{currentOrder.customerName}</p>
+                  <p className="font-medium truncate">{currentOrder.customerName}</p>
                 </div>
                 <div>
                   <span className="text-sm text-muted-foreground">Телефон:</span>
@@ -588,7 +561,7 @@ const Orders: React.FC = () => {
               {currentOrder.description && (
                 <div>
                   <span className="text-sm text-muted-foreground">Описание:</span>
-                  <p>{currentOrder.description}</p>
+                  <p className="whitespace-pre-wrap">{currentOrder.description}</p>
                 </div>
               )}
               
@@ -621,7 +594,7 @@ const Orders: React.FC = () => {
       
       {/* Edit Order Dialog */}
       <Dialog open={showEditDialog} onOpenChange={setShowEditDialog}>
-        <DialogContent>
+        <DialogContent className="max-w-md">
           <DialogHeader>
             <DialogTitle>Изменить заказ</DialogTitle>
           </DialogHeader>
@@ -634,6 +607,7 @@ const Orders: React.FC = () => {
                   value={productName}
                   onChange={(e) => setProductName(e.target.value)}
                   required
+                  className="truncate"
                 />
               </div>
               
@@ -672,18 +646,25 @@ const Orders: React.FC = () => {
                   value={customerName}
                   onChange={(e) => setCustomerName(e.target.value)}
                   required
+                  className="truncate"
                 />
               </div>
               
               <div className="space-y-2">
                 <Label htmlFor="edit-phone-number">Номер телефона</Label>
-                <Input
-                  id="edit-phone-number"
-                  type="tel"
-                  value={phoneNumber}
-                  onChange={(e) => setPhoneNumber(e.target.value)}
-                  required
-                />
+                <div className="flex">
+                  <span className="inline-flex items-center px-3 rounded-l-md border border-r-0 border-input bg-muted">
+                    +7
+                  </span>
+                  <Input
+                    id="edit-phone-number"
+                    type="tel"
+                    value={phoneNumber}
+                    onChange={(e) => setPhoneNumber(e.target.value)}
+                    required
+                    className="rounded-l-none"
+                  />
+                </div>
               </div>
               
               <div className="grid grid-cols-2 gap-4">
@@ -727,7 +708,7 @@ const Orders: React.FC = () => {
               <ImageHandler
                 imageUrl={imageUrl}
                 onImageChange={setImageUrl}
-                maxSize={1000} // 1000 KB = 1 MB
+                maxSize={1000}
               />
             </div>
             <DialogFooter className="mt-4">
@@ -753,7 +734,6 @@ const Orders: React.FC = () => {
         </Button>
       )}
       
-      {/* Converter floating button */}
       {showConverter && (
         <Button
           className="fixed bottom-4 left-4 bg-blue-600 hover:bg-blue-700"
