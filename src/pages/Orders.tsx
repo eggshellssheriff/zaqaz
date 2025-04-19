@@ -169,7 +169,7 @@ const Orders: React.FC = () => {
       const searchLower = searchTerm.toLowerCase();
       return order.productName.toLowerCase().includes(searchLower) || 
         order.customerName.toLowerCase().includes(searchLower) ||
-        order.id.includes(searchTerm) ||
+        order.id.toLowerCase().includes(searchLower.replace('#', '')) ||
         order.phoneNumber.includes(searchTerm) ||
         order.price.toString().includes(searchTerm);
     })
@@ -202,9 +202,9 @@ const Orders: React.FC = () => {
           >
             <div className="flex items-center justify-between w-full">
               <div className="flex-1 min-w-0">
-                <div className="font-medium truncate">
-                  {order.productName}
-                  <span className="ml-2 text-xs text-muted-foreground">#{order.id.slice(0, 5)}</span>
+                <div className="flex items-center space-x-2">
+                  <span className="text-xs text-muted-foreground">#{order.id.slice(0, 5)}</span>
+                  <span className="font-medium truncate">{order.productName}</span>
                 </div>
                 <div className="text-sm text-muted-foreground">{order.orderDate}</div>
               </div>
@@ -228,9 +228,13 @@ const Orders: React.FC = () => {
             onClick={() => handleViewOrder(order)}
           >
             <div className="flex justify-between items-center mb-2">
-              <div className="font-medium truncate max-w-[80%]">
-                {order.productName}
-                <span className="ml-2 text-xs text-muted-foreground">#{order.id.slice(0, 5)}</span>
+              <div className="flex items-center space-x-2 max-w-full">
+                <span className="text-xs text-muted-foreground whitespace-nowrap">
+                  #{order.id.slice(0, 5)}
+                </span>
+                <span className="font-medium truncate">
+                  {order.productName}
+                </span>
               </div>
             </div>
             
