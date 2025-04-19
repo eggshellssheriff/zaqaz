@@ -1,10 +1,13 @@
 
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 import Products from './Products';
 
 const Index: React.FC = () => {
-  return <Products />;
+  return (
+    <div className="w-full">
+      <Products />
+    </div>
+  );
 };
 
 export default Index;
