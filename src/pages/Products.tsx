@@ -307,76 +307,78 @@ const Products: React.FC = () => {
       )}
       
       {/* Add Product Dialog */}
-      <Dialog open={showAddDialog} onOpenChange={setShowAddDialog}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Добавить товар</DialogTitle>
-          </DialogHeader>
-          <form onSubmit={handleSubmit}>
-            <div className="space-y-4 py-2">
-              <div className="space-y-2">
-                <Label htmlFor="name">Название</Label>
-                <Input
-                  id="name"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  required
-                />
-              </div>
-              
-              <div className="grid grid-cols-2 gap-4">
+      {showAddDialog && (
+        <Dialog open={showAddDialog} onOpenChange={setShowAddDialog}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Добавить товар</DialogTitle>
+            </DialogHeader>
+            <form onSubmit={handleSubmit}>
+              <div className="space-y-4 py-2">
                 <div className="space-y-2">
-                  <Label htmlFor="price">Цена (тг)</Label>
+                  <Label htmlFor="name">Название</Label>
                   <Input
-                    id="price"
-                    type="number"
-                    min="0"
-                    step="0.01"
-                    value={price}
-                    onChange={(e) => setPrice(e.target.value)}
+                    id="name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
                     required
                   />
                 </div>
                 
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="price">Цена (тг)</Label>
+                    <Input
+                      id="price"
+                      type="number"
+                      min="0"
+                      step="0.01"
+                      value={price}
+                      onChange={(e) => setPrice(e.target.value)}
+                      required
+                    />
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="quantity">Количество</Label>
+                    <Input
+                      id="quantity"
+                      type="number"
+                      min="0"
+                      step="1"
+                      value={quantity}
+                      onChange={(e) => setQuantity(e.target.value)}
+                      required
+                    />
+                  </div>
+                </div>
+                
                 <div className="space-y-2">
-                  <Label htmlFor="quantity">Количество</Label>
-                  <Input
-                    id="quantity"
-                    type="number"
-                    min="0"
-                    step="1"
-                    value={quantity}
-                    onChange={(e) => setQuantity(e.target.value)}
-                    required
+                  <Label htmlFor="description">Описание</Label>
+                  <Textarea
+                    id="description"
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    rows={3}
                   />
                 </div>
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="description">Описание</Label>
-                <Textarea
-                  id="description"
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                  rows={3}
+                
+                <ImageHandler
+                  imageUrl={imageUrl}
+                  onImageChange={setImageUrl}
                 />
               </div>
-              
-              <ImageHandler
-                imageUrl={imageUrl}
-                onImageChange={setImageUrl}
-              />
-            </div>
-            <DialogFooter className="mt-4">
-              <Button type="submit">Сохранить</Button>
-            </DialogFooter>
-          </form>
-        </DialogContent>
-      </Dialog>
+              <DialogFooter className="mt-4">
+                <Button type="submit">Сохранить</Button>
+              </DialogFooter>
+            </form>
+          </DialogContent>
+        </Dialog>
+      )}
       
       {/* View Product Dialog */}
-      <Dialog open={showViewDialog} onOpenChange={setShowViewDialog}>
-        {currentProduct && (
+      {showViewDialog && currentProduct && (
+        <Dialog open={showViewDialog} onOpenChange={setShowViewDialog}>
           <DialogContent>
             <DialogHeader>
               <DialogTitle>{currentProduct.name}</DialogTitle>
@@ -432,76 +434,78 @@ const Products: React.FC = () => {
               </div>
             </div>
           </DialogContent>
-        )}
-      </Dialog>
+        </Dialog>
+      )}
       
       {/* Edit Product Dialog */}
-      <Dialog open={showEditDialog} onOpenChange={setShowEditDialog}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Изменить товар</DialogTitle>
-          </DialogHeader>
-          <form onSubmit={handleSubmit}>
-            <div className="space-y-4 py-2">
-              <div className="space-y-2">
-                <Label htmlFor="edit-name">Название</Label>
-                <Input
-                  id="edit-name"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  required
-                />
-              </div>
-              
-              <div className="grid grid-cols-2 gap-4">
+      {showEditDialog && currentProduct && (
+        <Dialog open={showEditDialog} onOpenChange={setShowEditDialog}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Изменить товар</DialogTitle>
+            </DialogHeader>
+            <form onSubmit={handleSubmit}>
+              <div className="space-y-4 py-2">
                 <div className="space-y-2">
-                  <Label htmlFor="edit-price">Цена (тг)</Label>
+                  <Label htmlFor="edit-name">Название</Label>
                   <Input
-                    id="edit-price"
-                    type="number"
-                    min="0"
-                    step="0.01"
-                    value={price}
-                    onChange={(e) => setPrice(e.target.value)}
+                    id="edit-name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
                     required
                   />
                 </div>
                 
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="edit-price">Цена (тг)</Label>
+                    <Input
+                      id="edit-price"
+                      type="number"
+                      min="0"
+                      step="0.01"
+                      value={price}
+                      onChange={(e) => setPrice(e.target.value)}
+                      required
+                    />
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="edit-quantity">Количество</Label>
+                    <Input
+                      id="edit-quantity"
+                      type="number"
+                      min="0"
+                      step="1"
+                      value={quantity}
+                      onChange={(e) => setQuantity(e.target.value)}
+                      required
+                    />
+                  </div>
+                </div>
+                
                 <div className="space-y-2">
-                  <Label htmlFor="edit-quantity">Количество</Label>
-                  <Input
-                    id="edit-quantity"
-                    type="number"
-                    min="0"
-                    step="1"
-                    value={quantity}
-                    onChange={(e) => setQuantity(e.target.value)}
-                    required
+                  <Label htmlFor="edit-description">Описание</Label>
+                  <Textarea
+                    id="edit-description"
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    rows={3}
                   />
                 </div>
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="edit-description">Описание</Label>
-                <Textarea
-                  id="edit-description"
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                  rows={3}
+                
+                <ImageHandler
+                  imageUrl={imageUrl}
+                  onImageChange={setImageUrl}
                 />
               </div>
-              
-              <ImageHandler
-                imageUrl={imageUrl}
-                onImageChange={setImageUrl}
-              />
-            </div>
-            <DialogFooter className="mt-4">
-              <Button type="submit">Сохранить</Button>
-            </DialogFooter>
-          </form>
-        </DialogContent>
-      </Dialog>
+              <DialogFooter className="mt-4">
+                <Button type="submit">Сохранить</Button>
+              </DialogFooter>
+            </form>
+          </DialogContent>
+        </Dialog>
+      )}
       
       {/* Back to top button */}
       {showBackToTop && (

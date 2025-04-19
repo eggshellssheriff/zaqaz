@@ -23,12 +23,7 @@ const CurrencyConverter: React.FC<CurrencyConverterProps> = ({ open, onOpenChang
       setIsLoading(true);
       try {
         // This is a mock API call - in a real app, you'd use an actual currency API
-        // const response = await fetch('https://api.exchangerate-api.com/v4/latest/CNY');
-        // const data = await response.json();
-        // const rate = data.rates.KZT;
-        
         // For now, we'll simulate a successful API call with a fixed rate
-        // In a real app, you'd use the actual rate from the API
         setTimeout(() => {
           setRate(65); // Example rate: 1 CNY = 65 KZT
           setIsLoading(false);
@@ -70,6 +65,11 @@ const CurrencyConverter: React.FC<CurrencyConverterProps> = ({ open, onOpenChang
       }
     }
   };
+
+  // Don't render anything if not open
+  if (!open) {
+    return null;
+  }
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
