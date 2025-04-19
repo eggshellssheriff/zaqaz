@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -48,13 +49,13 @@
   }
 
   .dark {
-    --background: 235 10% 23%;
+    --background: 224 5% 20%;
     --foreground: 210 40% 98%;
 
-    --card: 235 10% 23%;
+    --card: 224 5% 20%;
     --card-foreground: 210 40% 98%;
 
-    --popover: 235 10% 23%;
+    --popover: 224 5% 20%;
     --popover-foreground: 210 40% 98%;
 
     --primary: 210 40% 98%;
@@ -133,7 +134,7 @@
 }
 
 .fixed-header {
-  @apply sticky top-0 z-10 bg-background;
+  @apply sticky top-0 z-10 bg-background pb-2;
 }
 
 /* Add these styles at the end of the file */
@@ -148,4 +149,30 @@
 
 .product-name-truncate {
   @apply truncate block max-w-[150px];
+}
+
+/* Make sure delete buttons and price don't overlap */
+.order-price-delete-container {
+  @apply flex items-center justify-end gap-2;
+}
+
+/* Ensure content is sized properly for mobile screens */
+.mobile-container {
+  @apply w-full max-w-md mx-auto;
+}
+
+/* Improve truncation for all text elements */
+.text-truncate {
+  @apply truncate;
+}
+
+/* Fix dialog content padding for mobile */
+.dialog-padding-fix {
+  @apply px-4;
+}
+
+/* Fix database order list display */
+.database-order-grid {
+  @apply grid gap-2;
+  grid-template-columns: minmax(0, 1fr) auto auto;
 }

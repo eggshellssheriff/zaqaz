@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Trash2, ArrowUp } from 'lucide-react';
 import { useApp, Customer, Order } from '@/contexts/AppContext';
@@ -87,7 +88,7 @@ const Database: React.FC = () => {
   };
   
   return (
-    <div className="container mx-auto pb-16">
+    <div className="container mx-auto pb-16 max-w-md">
       <div className="fixed-header py-4">
         <h1 className="text-2xl font-bold">База данных</h1>
       </div>
@@ -115,12 +116,12 @@ const Database: React.FC = () => {
               className="list-view-item hover:bg-accent/50 cursor-pointer"
               onClick={() => handleCustomerClick(customer)}
             >
-              <div className="font-medium">{customer.phoneNumber}</div>
+              <div className="font-medium truncate max-w-[calc(100%-40px)]">{customer.phoneNumber}</div>
               
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-8 w-8 text-destructive"
+                className="h-8 w-8 text-destructive shrink-0"
                 onClick={(e) => {
                   e.stopPropagation();
                   handleDeleteCustomer(customer.phoneNumber);
@@ -136,7 +137,7 @@ const Database: React.FC = () => {
       {/* Customer Orders Dialog */}
       <Dialog open={showCustomerDialog} onOpenChange={setShowCustomerDialog}>
         {currentCustomer && (
-          <DialogContent className="max-w-xl">
+          <DialogContent className="max-w-md mobile-keyboard-scroll">
             <DialogHeader>
               <DialogTitle>Клиент: {currentCustomer.phoneNumber}</DialogTitle>
             </DialogHeader>
@@ -151,25 +152,25 @@ const Database: React.FC = () => {
               </div>
               
               <div className="border rounded-md">
-                <div className="bg-muted p-2 font-semibold grid grid-cols-[1fr,auto,auto]">
-                  <div>Товар</div>
+                <div className="bg-muted p-2 font-semibold grid grid-cols-[minmax(0,1fr)_auto_auto]">
+                  <div className="truncate">Товар</div>
                   <div>Дата</div>
-                  <div className="text-right pr-8">Сумма</div>
+                  <div className="text-right pr-2">Сумма</div>
                 </div>
                 
                 <div className="max-h-96 overflow-y-auto">
                   {getSortedOrders(currentCustomer.orders).map(order => (
-                    <div key={order.id} className="border-t p-2 grid grid-cols-[1fr,auto,auto] gap-2 relative">
-                      <div className="font-medium truncate max-w-[200px]">{order.productName}</div>
+                    <div key={order.id} className="border-t p-2 grid grid-cols-[minmax(0,1fr)_auto_auto] gap-2 relative">
+                      <div className="font-medium truncate">{order.productName}</div>
                       <div className="text-sm whitespace-nowrap">{order.orderDate}</div>
-                      <div className="flex items-center gap-2">
-                        <span className="text-right whitespace-nowrap">
+                      <div className="flex items-center justify-end gap-2">
+                        <span className="text-right whitespace-nowrap mr-2">
                           {(order.price * order.quantity).toLocaleString()} тг
                         </span>
                         <Button
                           variant="ghost"
                           size="icon"
-                          className="h-6 w-6 text-destructive"
+                          className="h-6 w-6 text-destructive shrink-0"
                           onClick={() => handleDeleteCustomerOrder(currentCustomer.phoneNumber, order.id)}
                         >
                           <Trash2 size={14} />
